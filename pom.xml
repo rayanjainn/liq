@@ -88,13 +88,7 @@
       <version>${mapstruct.version}</version>
       <scope>provided</scope>
     </dependency>
-    
-    
-    <dependency>
-    <groupId>com.amazonaws</groupId>
-    <artifactId>aws-java-sdk-s3</artifactId>
-    <version>1.12.640</version>
-</dependency>
+    <!-- AWS S3 dependency REMOVED — replaced with local file storage -->
 
 
     <!-- Lombok -->
@@ -105,6 +99,10 @@
     </dependency>
 
     <!-- Testing -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
