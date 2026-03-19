@@ -1,54 +1,31 @@
 package com.collabnex.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+/**
+ * JPA entity tracking uploaded files. Stores metadata including the file name,
+ * content type, and the local disk URL path where the file is stored.
+ */
 @Entity
 @Table(name = "uploaded_files")
+@Getter
+@Setter
+@NoArgsConstructor
 public class UploadedFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Original filename as provided by the uploader */
     private String fileName;
+
+    /** MIME content type (e.g., application/pdf, image/jpeg) */
     private String fileType;
+
+    /** Relative URL path to the stored file (e.g., /uploads/files/1_123_doc.pdf) */
     private String fileUrl;
-    private String s3Key;
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
-    }
-
-    public String getS3Key() {
-        return s3Key;
-    }
-
-    public void setS3Key(String s3Key) {
-        this.s3Key = s3Key;
-    }
 }
-
