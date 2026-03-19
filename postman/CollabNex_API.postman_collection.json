@@ -1,0 +1,762 @@
+{
+  "info": {
+    "name": "CollabNex API — Full Test Suite",
+    "description": "Complete test collection for CollabNex backend. Run requests IN ORDER (top to bottom) — later requests depend on tokens/IDs from earlier ones.\n\nVariables auto-set via Tests scripts:\n- {{base_url}} = http://localhost:8080\n- {{client_token}}, {{freelancer1_token}}, etc.\n- {{job_id}}, {{freelancer1_id}}, etc.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080" },
+    { "key": "client_token", "value": "" },
+    { "key": "client_id", "value": "" },
+    { "key": "freelancer1_token", "value": "" },
+    { "key": "freelancer1_id", "value": "" },
+    { "key": "freelancer2_token", "value": "" },
+    { "key": "freelancer2_id", "value": "" },
+    { "key": "freelancer3_token", "value": "" },
+    { "key": "freelancer3_id", "value": "" },
+    { "key": "freelancer4_token", "value": "" },
+    { "key": "freelancer4_id", "value": "" },
+    { "key": "admin_token", "value": "" },
+    { "key": "job1_id", "value": "" },
+    { "key": "job2_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "01 — Auth",
+      "item": [
+        {
+          "name": "01.1 Register CLIENT",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Acme Corp", "type": "text" },
+                { "key": "email", "value": "client@test.com", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" },
+                { "key": "role", "value": "CLIENT", "type": "text" },
+                { "key": "phoneNumber", "value": "9876543210", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Has token', () => {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.be.true;",
+                  "  pm.expect(json.data.token).to.be.a('string');",
+                  "  pm.expect(json.data.user.role).to.equal('CLIENT');",
+                  "  pm.collectionVariables.set('client_token', json.data.token);",
+                  "  pm.collectionVariables.set('client_id', json.data.user.id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.2 Register FREELANCER #1",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Jane Developer", "type": "text" },
+                { "key": "email", "value": "freelancer1@test.com", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" },
+                { "key": "role", "value": "FREELANCER", "type": "text" },
+                { "key": "phoneNumber", "value": "1111111111", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('freelancer1_token', json.data.token);",
+                  "pm.collectionVariables.set('freelancer1_id', json.data.user.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.3 Register FREELANCER #2",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Bob Builder", "type": "text" },
+                { "key": "email", "value": "freelancer2@test.com", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" },
+                { "key": "role", "value": "FREELANCER", "type": "text" },
+                { "key": "phoneNumber", "value": "2222222222", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('freelancer2_token', json.data.token);",
+                  "pm.collectionVariables.set('freelancer2_id', json.data.user.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.4 Register FREELANCER #3",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Carol Coder", "type": "text" },
+                { "key": "email", "value": "freelancer3@test.com", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" },
+                { "key": "role", "value": "FREELANCER", "type": "text" },
+                { "key": "phoneNumber", "value": "3333333333", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('freelancer3_token', json.data.token);",
+                  "pm.collectionVariables.set('freelancer3_id', json.data.user.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.5 Register FREELANCER #4",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Dave Designer", "type": "text" },
+                { "key": "email", "value": "freelancer4@test.com", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" },
+                { "key": "role", "value": "FREELANCER", "type": "text" },
+                { "key": "phoneNumber", "value": "4444444444", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('freelancer4_token', json.data.token);",
+                  "pm.collectionVariables.set('freelancer4_id', json.data.user.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.6 Register ADMIN → should FAIL (400)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Hacker", "type": "text" },
+                { "key": "email", "value": "hacker@test.com", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" },
+                { "key": "role", "value": "ADMIN", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin registration blocked', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.be.false;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.7 Register DUPLICATE email → should FAIL (409)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Acme Dup", "type": "text" },
+                { "key": "email", "value": "client@test.com", "type": "text" },
+                { "key": "password", "value": "Password123!", "type": "text" },
+                { "key": "role", "value": "CLIENT", "type": "text" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Duplicate email rejected', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.be.false;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.8 Login as CLIENT",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"client@test.com\", \"password\": \"Password123!\" }"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 + token', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data.token).to.be.a('string');",
+                  "  pm.expect(json.data.user.role).to.equal('CLIENT');",
+                  "  pm.collectionVariables.set('client_token', json.data.token);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.9 Login as FREELANCER",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"freelancer1@test.com\", \"password\": \"Password123!\" }"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 + FREELANCER role', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data.user.role).to.equal('FREELANCER');",
+                  "  pm.collectionVariables.set('freelancer1_token', json.data.token);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.10 Login as ADMIN (env creds)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"admin@collabnex.com\", \"password\": \"changeme\" }"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin login works', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data.user.role).to.equal('ADMIN');",
+                  "  pm.expect(json.data.user.id).to.equal(-1);",
+                  "  pm.collectionVariables.set('admin_token', json.data.token);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01.11 Login with WRONG password → FAIL",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"client@test.com\", \"password\": \"wrongpassword\" }"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Invalid credentials rejected', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 401]);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.be.false;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 — Client: Post Jobs",
+      "item": [
+        {
+          "name": "02.1 Client posts Job #1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{client_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"title\": \"Build a Landing Page\", \"description\": \"Need a responsive React landing page with animations.\" }"
+            },
+            "url": { "raw": "{{base_url}}/client/jobs", "host": ["{{base_url}}"], "path": ["client", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Job created 201', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data.title).to.equal('Build a Landing Page');",
+                  "  pm.collectionVariables.set('job1_id', json.data.id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02.2 Client posts Job #2",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{client_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"title\": \"Mobile App Backend\", \"description\": \"Spring Boot REST API for a fitness app.\" }"
+            },
+            "url": { "raw": "{{base_url}}/client/jobs", "host": ["{{base_url}}"], "path": ["client", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Job #2 created', () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('job2_id', json.data.id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02.3 Client lists own jobs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{client_token}}" }],
+            "url": { "raw": "{{base_url}}/client/jobs", "host": ["{{base_url}}"], "path": ["client", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Returns 2 jobs', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array').with.lengthOf(2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 — Freelancer: View & Apply",
+      "item": [
+        {
+          "name": "03.1 Freelancer views all jobs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancer1_token}}" }],
+            "url": { "raw": "{{base_url}}/freelancer/jobs", "host": ["{{base_url}}"], "path": ["freelancer", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Jobs visible to freelancer', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array').with.length.greaterThan(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03.2 Freelancer #1 applies to Job #1",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancer1_token}}" }],
+            "url": { "raw": "{{base_url}}/freelancer/jobs/{{job1_id}}/apply", "host": ["{{base_url}}"], "path": ["freelancer", "jobs", "{{job1_id}}", "apply"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Application success', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03.3 Freelancer #1 applies AGAIN → 409",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancer1_token}}" }],
+            "url": { "raw": "{{base_url}}/freelancer/jobs/{{job1_id}}/apply", "host": ["{{base_url}}"], "path": ["freelancer", "jobs", "{{job1_id}}", "apply"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Duplicate application rejected (409)', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.be.false;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03.4 Freelancer #2 applies to Job #1",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancer2_token}}" }],
+            "url": { "raw": "{{base_url}}/freelancer/jobs/{{job1_id}}/apply", "host": ["{{base_url}}"], "path": ["freelancer", "jobs", "{{job1_id}}", "apply"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.test('Success', () => pm.response.to.have.status(200));"] }
+            }
+          ]
+        },
+        {
+          "name": "03.5 Freelancer #3 applies to Job #1",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancer3_token}}" }],
+            "url": { "raw": "{{base_url}}/freelancer/jobs/{{job1_id}}/apply", "host": ["{{base_url}}"], "path": ["freelancer", "jobs", "{{job1_id}}", "apply"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.test('Success', () => pm.response.to.have.status(200));"] }
+            }
+          ]
+        },
+        {
+          "name": "03.6 Freelancer #4 applies to Job #1",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancer4_token}}" }],
+            "url": { "raw": "{{base_url}}/freelancer/jobs/{{job1_id}}/apply", "host": ["{{base_url}}"], "path": ["freelancer", "jobs", "{{job1_id}}", "apply"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.test('Success', () => pm.response.to.have.status(200));"] }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 — Admin: View & Shortlist",
+      "item": [
+        {
+          "name": "04.1 Admin views all jobs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/jobs", "host": ["{{base_url}}"], "path": ["admin", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin sees all jobs', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array').with.lengthOf(2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04.2 Admin views applications for Job #1",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/jobs/{{job1_id}}/applications", "host": ["{{base_url}}"], "path": ["admin", "jobs", "{{job1_id}}", "applications"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('4 applicants visible', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array').with.lengthOf(4);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04.3 Admin shortlists with 2 IDs → FAIL (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"freelancerIds\": [{{freelancer1_id}}, {{freelancer2_id}}] }"
+            },
+            "url": { "raw": "{{base_url}}/admin/jobs/{{job1_id}}/shortlist", "host": ["{{base_url}}"], "path": ["admin", "jobs", "{{job1_id}}", "shortlist"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Too few IDs rejected (400)', () => {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04.4 Admin shortlists 3 valid IDs → SUCCESS",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"freelancerIds\": [{{freelancer1_id}}, {{freelancer2_id}}, {{freelancer3_id}}] }"
+            },
+            "url": { "raw": "{{base_url}}/admin/jobs/{{job1_id}}/shortlist", "host": ["{{base_url}}"], "path": ["admin", "jobs", "{{job1_id}}", "shortlist"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Shortlist saved (200)', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 — Client: View Shortlist",
+      "item": [
+        {
+          "name": "05.1 Client views shortlisted candidates",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{client_token}}" }],
+            "url": { "raw": "{{base_url}}/client/jobs/{{job1_id}}/shortlisted", "host": ["{{base_url}}"], "path": ["client", "jobs", "{{job1_id}}", "shortlisted"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('3 shortlisted candidates', () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.data).to.be.an('array').with.lengthOf(3);",
+                  "  pm.expect(json.data[0]).to.have.property('name');",
+                  "  pm.expect(json.data[0]).to.have.property('email');",
+                  "  pm.expect(json.data[0]).to.have.property('phoneNumber');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 — Role Guards (403 tests)",
+      "item": [
+        {
+          "name": "06.1 Freelancer tries POST /client/jobs → 403",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{freelancer1_token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"title\": \"Hacked!\", \"description\": \"Should not work\" }" },
+            "url": { "raw": "{{base_url}}/client/jobs", "host": ["{{base_url}}"], "path": ["client", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.test('403 Forbidden', () => pm.response.to.have.status(403));"] }
+            }
+          ]
+        },
+        {
+          "name": "06.2 Client tries GET /admin/jobs → 403",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{client_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/jobs", "host": ["{{base_url}}"], "path": ["admin", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.test('403 Forbidden', () => pm.response.to.have.status(403));"] }
+            }
+          ]
+        },
+        {
+          "name": "06.3 Client tries GET /freelancer/jobs → 403",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{client_token}}" }],
+            "url": { "raw": "{{base_url}}/freelancer/jobs", "host": ["{{base_url}}"], "path": ["freelancer", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.test('403 Forbidden', () => pm.response.to.have.status(403));"] }
+            }
+          ]
+        },
+        {
+          "name": "06.4 No JWT → 401/403",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/client/jobs", "host": ["{{base_url}}"], "path": ["client", "jobs"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["pm.test('Unauthorized without JWT', () => pm.expect(pm.response.code).to.be.oneOf([401, 403]));"]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
