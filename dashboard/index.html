@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollabNex Testing Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glass-container">
+        <header>
+            <div class="logo">
+                <span class="logo-accent">Collab</span>Nex
+            </div>
+            <div id="userStatus" class="user-status">
+                <span id="currentUser">Not Logged In</span>
+                <button id="logoutBtn" style="display:none;" class="btn btn-danger">Logout</button>
+            </div>
+        </header>
+
+        <nav class="main-tabs">
+            <button class="tab-link active" data-tab="auth">Account</button>
+            <button class="tab-link" data-tab="freelancer">Freelancer</button>
+            <button class="tab-link" data-tab="client">Client</button>
+            <button class="tab-link" data-tab="admin">Admin</button>
+            <button class="tab-link" data-tab="files">Files & MISC</button>
+        </nav>
+
+        <main id="tabContent">
+            <!-- Auth Tab -->
+            <section id="auth" class="tab-pane active">
+                <div class="auth-grid">
+                    <div class="card glass-card">
+                        <h3>Register</h3>
+                        <form id="registerForm">
+                            <input type="text" id="regName" placeholder="Full Name" required>
+                            <input type="email" id="regEmail" placeholder="Email" required>
+                            <input type="password" id="regPassword" placeholder="Password" required>
+                            <input type="text" id="regPhone" placeholder="Phone Number" required>
+                            <select id="regRole">
+                                <option value="CLIENT">Register as Client</option>
+                                <option value="FREELANCER">Register as Freelancer</option>
+                            </select>
+                            <div class="file-input-group" id="resumeGroup" style="display: none;">
+                                <label>Resume (PDF/Image):</label>
+                                <input type="file" id="regResume" accept=".pdf,.png,.jpg,.jpeg">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Account</button>
+                        </form>
+                    </div>
+
+                    <div class="card glass-card">
+                        <h3>Login</h3>
+                        <form id="loginForm">
+                            <input type="email" id="loginEmail" placeholder="Email" required>
+                            <input type="password" id="loginPassword" placeholder="Password" required>
+                            <div class="hint">Admins use virtual credentials (email/password in .env)</div>
+                            <button type="submit" class="btn btn-primary">Sign In</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Freelancer Tab -->
+            <section id="freelancer" class="tab-pane">
+                <div class="card glass-card">
+                    <div class="flex-between">
+                        <h3>Job Feed</h3>
+                        <button id="refreshJobsBtn" class="btn btn-secondary">Refresh Feed</button>
+                    </div>
+                    <div class="hint">Jobs from Paid Clients are prioritized at the top.</div>
+                    <div id="jobFeed" class="item-list">
+                        <!-- Jobs injected here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Client Tab -->
+            <section id="client" class="tab-pane">
+                <div class="auth-grid">
+                    <div class="card glass-card">
+                        <h3>Post a Job</h3>
+                        <form id="jobForm">
+                            <input type="text" id="jobTitle" placeholder="Job Title" required>
+                            <textarea id="jobDesc" placeholder="Full Job Description" required></textarea>
+                            <p class="paid-hint">Paid Member Status: <span id="clientStatusBadge" class="badge">N/A</span></p>
+                            <button type="submit" class="btn btn-primary">Post Job</button>
+                        </form>
+                    </div>
+                    <div class="card glass-card">
+                        <h3>My Jobs & Shortlists</h3>
+                        <div id="myJobs" class="item-list">
+                            <!-- Client jobs injected here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Tab -->
+            <section id="admin" class="tab-pane">
+                <div class="admin-dashboard">
+                    <div class="card glass-card">
+                        <div class="flex-between">
+                            <h3>All Jobs (Admin View)</h3>
+                            <button id="refreshAdminJobsBtn" class="btn btn-secondary">Reload</button>
+                        </div>
+                        <div id="adminJobs" class="item-list">
+                            <!-- Admin jobs injected here -->
+                        </div>
+                    </div>
+                    <div id="applicantBoard" class="card glass-card" style="display: none;">
+                        <h3 id="currentJobLabel">Applicants for [Title]</h3>
+                        <div class="hint">Paid Members are prioritized at the top.</div>
+                        <div id="applicantList" class="item-list">
+                            <!-- Applicants here -->
+                        </div>
+                        <div class="shortlist-actions">
+                            <p>Select exactly 3-4 candidates to shortlist:</p>
+                            <button id="saveShortlistBtn" class="btn btn-success">Save Shortlist</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Files Tab -->
+            <section id="files" class="tab-pane">
+                <div class="card glass-card">
+                    <h3>Multipart File Upload</h3>
+                    <form id="uploadForm">
+                        <input type="file" id="genericFile" required>
+                        <button type="submit" class="btn btn-primary">Upload to Disk</button>
+                    </form>
+                    <div id="uploadResult" class="result-box"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div id="apiResponse" class="api-log">
+                <div class="log-header">Server Responses (Recent)</div>
+                <div id="logContent" class="log-content">Waiting for actions...</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification system -->
+    <div id="notif-bar" class="notif"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
